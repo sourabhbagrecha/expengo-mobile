@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -8,36 +8,57 @@ import {
 } from 'react-native';
 import {useExpenses} from '../contexts/ExpenseContext';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-const CreateExpense = () => {
+const EditExpense = () => {
+  const {
+    params: {_id},
+  } = useRoute();
+  const nav = useNavigation();
+  const {getExpenseById, updateExpense} = useExpenses();
+
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
   const [mode, setMode] = useState('');
   const [createdAt, setCreatedAt] = useState(new Date());
-  const nav = useNavigation();
 
   const onDateChange = (_, x) => {
     setCreatedAt(x);
   };
 
-  const {insertExpense} = useExpenses();
+  const loadCurrentStateOfExpense = async () => {
+    try {
+      const currentStateOfExpense = await getExpenseById(_id);
+      setTitle(currentStateOfExpense.title);
+      setAmount(currentStateOfExpense.amount.toString());
+      setCategory(currentStateOfExpense.category);
+      setMode(currentStateOfExpense.mode);
+      setCreatedAt(currentStateOfExpense.createdAt);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onExpenseSubmit = async () => {
     try {
-      await insertExpense({
+      await updateExpense(_id, {
+        _id,
         title,
         amount: Number(amount),
         category,
         mode,
-        createdAt,
+        createdAt: new Date(createdAt),
       });
       nav.navigate('Home');
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    loadCurrentStateOfExpense();
+  }, []);
 
   return (
     <View style={styles.screen}>
@@ -96,4 +117,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateExpense;
+export default EditExpense;

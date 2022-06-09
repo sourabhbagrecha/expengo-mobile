@@ -63,9 +63,10 @@ const ExpenseProvider = ({children}) => {
   }, [user, realmRef]);
 
   const insertExpense = async expense => {
+    const realm = realmRef.current;
     try {
-      realmRef.current.write(() => {
-        realmRef.current.create('expense', {
+      realm.write(() => {
+        realm.create('expense', {
           ...expense,
           _id: new ObjectId(),
           author: ObjectId(user.id),
@@ -76,8 +77,42 @@ const ExpenseProvider = ({children}) => {
     }
   };
 
+  const getExpenseById = async _id => {
+    const realm = realmRef.current;
+    try {
+      return realm.objects('expense').filtered('_id == $0', ObjectId(_id))[0];
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateExpense = async (_id, updatedExpense) => {
+    const realm = realmRef.current;
+    try {
+      realm.write(() => {
+        let oldExpense = realm
+          .objects('expense')
+          .filtered('_id == $0', ObjectId(_id))[0];
+        oldExpense = updatedExpense;
+        oldExpense.title = updatedExpense.title;
+        oldExpense.amount = updatedExpense.amount;
+        oldExpense.category = updatedExpense.category;
+        oldExpense.mode = updatedExpense.mode;
+        oldExpense.createdAt = updatedExpense.createdAt;
+        console.log('wbn', {oldExpense});
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteExpense = () => {
+    const realm = realmRef.current;
+  };
+
   return (
-    <ExpenseContext.Provider value={{expenses, insertExpense}}>
+    <ExpenseContext.Provider
+      value={{expenses, insertExpense, getExpenseById, updateExpense}}>
       {children}
     </ExpenseContext.Provider>
   );

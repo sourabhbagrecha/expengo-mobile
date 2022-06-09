@@ -1,9 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
+import {formatDistanceToNow} from 'date-fns';
 import React from 'react';
 import {FlatList, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {useExpenses} from '../contexts/ExpenseContext';
 
 const ExpenseCard = ({exp}) => {
+  const nav = useNavigation();
+  const navigateToEditExpense = () => {
+    nav.navigate('Edit', {_id: exp._id.toString()});
+  };
   return (
     <View style={styles.card}>
       <View style={styles.cardRow}>
@@ -14,6 +19,21 @@ const ExpenseCard = ({exp}) => {
         <View>
           <Text style={styles.cardMode}>{exp.mode}</Text>
           <Text style={styles.cardAmount}>₹{exp.amount}/-</Text>
+        </View>
+      </View>
+      <View style={styles.cardRow}>
+        <View style={styles.cardButtonRow}>
+          <Text>{formatDistanceToNow(new Date(exp.createdAt))}</Text>
+        </View>
+        <View style={styles.cardButtonRow}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={navigateToEditExpense}>
+            <Text style={styles.editText}>Edit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={navigateToEditExpense}>
+            <Text style={styles.deleteText}>Delete</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -62,6 +82,19 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  cardButtonRow: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  editButton: {
+    marginHorizontal: 15,
+  },
+  editText: {
+    color: 'blue',
+  },
+  deleteText: {
+    color: 'red',
   },
   cardTitle: {fontWeight: '500', fontSize: 25},
   cardCategory: {fontWeight: '400', fontSize: 15},

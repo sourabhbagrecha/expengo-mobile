@@ -5,6 +5,7 @@ import {useAuth} from './contexts/AuthContext';
 import Login from './screens/Login';
 import CreateExpense from './screens/CreateExpense';
 import Home from './screens/Home';
+import EditExpense from './screens/EditExpense';
 
 const NavigationMenu = () => {
   const Stack = createNativeStackNavigator();
@@ -17,6 +18,7 @@ const NavigationMenu = () => {
           <>
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="New" component={CreateExpense} />
+            <Stack.Screen name="Edit" component={EditExpense} />
           </>
         ) : (
           <>
