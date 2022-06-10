@@ -34,10 +34,9 @@ const ExpenseProvider = ({children}) => {
       .then(userRealm => {
         realmRef.current = userRealm;
         const loadedExpenses = userRealm.objects('expense');
-        console.log(
-          {loadedExpenses},
-          loadedExpenses[loadedExpenses.length - 1],
-        );
+        userRealm.addListener('change', () => {
+          setExpenses(userRealm.objects('expense'));
+        });
         setExpenses(loadedExpenses);
       })
       .catch(err => {
@@ -50,8 +49,8 @@ const ExpenseProvider = ({children}) => {
         userRealm.syncSession
           .uploadAllLocalChanges()
           .then(r => {
-            console.log({r});
             setExpenses([]);
+            userRealm.removeListener('change');
             realmRef.current.close();
             realmRef.current = null;
           })
@@ -86,33 +85,41 @@ const ExpenseProvider = ({children}) => {
     }
   };
 
-  const updateExpense = async (_id, updatedExpense) => {
+  const updateExpenseById = async (_id, updatedExpense) => {
     const realm = realmRef.current;
     try {
       realm.write(() => {
         let oldExpense = realm
           .objects('expense')
           .filtered('_id == $0', ObjectId(_id))[0];
-        oldExpense = updatedExpense;
         oldExpense.title = updatedExpense.title;
         oldExpense.amount = updatedExpense.amount;
         oldExpense.category = updatedExpense.category;
         oldExpense.mode = updatedExpense.mode;
         oldExpense.createdAt = updatedExpense.createdAt;
-        console.log('wbn', {oldExpense});
       });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const deleteExpense = () => {
+  const deleteExpenseById = _id => {
     const realm = realmRef.current;
+    realm.write(() => {
+      let expense = realm.objectForPrimaryKey('expense', ObjectId(_id));
+      realm.delete(expense);
+    });
   };
 
   return (
     <ExpenseContext.Provider
-      value={{expenses, insertExpense, getExpenseById, updateExpense}}>
+      value={{
+        expenses,
+        insertExpense,
+        getExpenseById,
+        updateExpenseById,
+        deleteExpenseById,
+      }}>
       {children}
     </ExpenseContext.Provider>
   );

@@ -15,7 +15,7 @@ const EditExpense = () => {
     params: {_id},
   } = useRoute();
   const nav = useNavigation();
-  const {getExpenseById, updateExpense} = useExpenses();
+  const {getExpenseById, updateExpenseById} = useExpenses();
 
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
@@ -42,7 +42,7 @@ const EditExpense = () => {
 
   const onExpenseSubmit = async () => {
     try {
-      await updateExpense(_id, {
+      await updateExpenseById(_id, {
         _id,
         title,
         amount: Number(amount),
@@ -57,7 +57,7 @@ const EditExpense = () => {
   };
 
   useEffect(() => {
-    loadCurrentStateOfExpense();
+    loadCurrentStateOfExpense(); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

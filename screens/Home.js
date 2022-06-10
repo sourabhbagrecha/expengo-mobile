@@ -6,8 +6,12 @@ import {useExpenses} from '../contexts/ExpenseContext';
 
 const ExpenseCard = ({exp}) => {
   const nav = useNavigation();
+  const {deleteExpenseById} = useExpenses();
   const navigateToEditExpense = () => {
     nav.navigate('Edit', {_id: exp._id.toString()});
+  };
+  const onDelete = () => {
+    deleteExpenseById(exp._id);
   };
   return (
     <View style={styles.card}>
@@ -31,7 +35,7 @@ const ExpenseCard = ({exp}) => {
             onPress={navigateToEditExpense}>
             <Text style={styles.editText}>Edit</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={navigateToEditExpense}>
+          <TouchableOpacity onPress={onDelete}>
             <Text style={styles.deleteText}>Delete</Text>
           </TouchableOpacity>
         </View>
