@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,35 +9,26 @@ import {
 import {useExpenses} from '../contexts/ExpenseContext';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {useObject} from '../contexts/RealmContext';
+import {ObjectId} from 'bson';
 
 const EditExpense = () => {
   const {
     params: {_id},
   } = useRoute();
   const nav = useNavigation();
-  const {getExpenseById, updateExpenseById} = useExpenses();
+  const {updateExpenseById} = useExpenses();
 
-  const [title, setTitle] = useState('');
-  const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('');
-  const [mode, setMode] = useState('');
-  const [createdAt, setCreatedAt] = useState(new Date());
+  const currentStateOfExpense = useObject('expense', ObjectId(_id));
+
+  const [title, setTitle] = useState(currentStateOfExpense.title);
+  const [amount, setAmount] = useState(currentStateOfExpense.amount.toString());
+  const [category, setCategory] = useState(currentStateOfExpense.category);
+  const [mode, setMode] = useState(currentStateOfExpense.mode);
+  const [createdAt, setCreatedAt] = useState(currentStateOfExpense.createdAt);
 
   const onDateChange = (_, x) => {
     setCreatedAt(x);
-  };
-
-  const loadCurrentStateOfExpense = async () => {
-    try {
-      const currentStateOfExpense = await getExpenseById(_id);
-      setTitle(currentStateOfExpense.title);
-      setAmount(currentStateOfExpense.amount.toString());
-      setCategory(currentStateOfExpense.category);
-      setMode(currentStateOfExpense.mode);
-      setCreatedAt(currentStateOfExpense.createdAt);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const onExpenseSubmit = async () => {
@@ -52,13 +43,9 @@ const EditExpense = () => {
       });
       nav.navigate('Home');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
-
-  useEffect(() => {
-    loadCurrentStateOfExpense(); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <View style={styles.screen}>

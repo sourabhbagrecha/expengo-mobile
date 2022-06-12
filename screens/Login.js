@@ -12,7 +12,7 @@ const Login = () => {
     try {
       await signIn(email, password);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
   return (

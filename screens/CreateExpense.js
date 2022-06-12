@@ -35,7 +35,7 @@ const CreateExpense = () => {
       });
       nav.navigate('Home');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

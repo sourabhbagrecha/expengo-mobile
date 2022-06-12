@@ -1,7 +1,8 @@
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {formatDistanceToNow} from 'date-fns';
-import React from 'react';
 import {FlatList, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {useQuery, useRealm} from '../contexts/RealmContext';
 import {useExpenses} from '../contexts/ExpenseContext';
 
 const ExpenseCard = ({exp}) => {
@@ -45,11 +46,12 @@ const ExpenseCard = ({exp}) => {
 };
 
 export default function Home() {
-  const {expenses} = useExpenses();
+  const expenses = useQuery('expense');
   const nav = useNavigation();
   const navigateToNew = () => {
     nav.navigate('New');
   };
+
   return (
     <View style={styles.screen}>
       <View style={styles.screenTitleRow}>
