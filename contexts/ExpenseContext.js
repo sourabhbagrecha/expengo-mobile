@@ -1,13 +1,13 @@
 import React, {useContext} from 'react';
 import {ObjectId} from 'bson';
 import {createContext} from 'react';
-import {useAuth} from './AuthContext';
 import {useRealm} from './RealmContext';
+import {useUser} from '@realm/react';
 
 const ExpenseContext = createContext();
 
 const ExpenseProvider = ({children}) => {
-  const user = useAuth();
+  const user = useUser();
 
   const realm = useRealm();
 

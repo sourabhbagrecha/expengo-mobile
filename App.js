@@ -1,21 +1,24 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {AuthProvider} from './contexts/AuthContext';
-import NavigationMenu from './NavigationMenu';
+import {AppProvider, UserProvider} from '@realm/react';
 import 'react-native-get-random-values';
-import {CustomRealmProvider} from './contexts/RealmContext';
 import {ExpenseProvider} from './contexts/ExpenseContext';
+import {CustomRealmProvider} from './contexts/RealmContext';
+import {appId} from './realm/realmApp';
+import {AuthNavMenu, UnAuthNavMenu} from './NavigationMenu';
 
 const App = () => {
   return (
     <View style={styles}>
-      <AuthProvider>
-        <CustomRealmProvider>
-          <ExpenseProvider>
-            <NavigationMenu />
-          </ExpenseProvider>
-        </CustomRealmProvider>
-      </AuthProvider>
+      <AppProvider id={appId}>
+        <UserProvider fallback={UnAuthNavMenu}>
+          <CustomRealmProvider>
+            <ExpenseProvider>
+              <AuthNavMenu />
+            </ExpenseProvider>
+          </CustomRealmProvider>
+        </UserProvider>
+      </AppProvider>
     </View>
   );
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {formatDistanceToNow} from 'date-fns';
 import {FlatList, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import {useQuery, useRealm} from '../contexts/RealmContext';
+import {useQuery} from '../contexts/RealmContext';
 import {useExpenses} from '../contexts/ExpenseContext';
 
 const ExpenseCard = ({exp}) => {

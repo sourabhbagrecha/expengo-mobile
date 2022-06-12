@@ -1,20 +1,21 @@
+import {Realm, useApp} from '@realm/react';
 import React, {useState} from 'react';
 import {Button, StyleSheet, TextInput, View} from 'react-native';
-import {useAuth} from '../contexts/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('sourabhbagrecha@gmail.com');
   const [password, setPassword] = useState('secret123');
 
-  const {signIn} = useAuth();
+  const app = useApp();
 
   const onSubmit = async () => {
     try {
-      await signIn(email, password);
+      await app.logIn(Realm.Credentials.emailPassword(email, password));
     } catch (error) {
       console.error(error);
     }
   };
+
   return (
     <View style={styles}>
       <TextInput
