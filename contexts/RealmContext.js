@@ -14,6 +14,10 @@ const CustomRealmProvider = ({children}) => {
     type: 'openImmediately',
   };
 
+  const handleSyncError = err => {
+    console.error({err});
+  };
+
   return (
     <RealmProvider
       sync={{
@@ -21,6 +25,7 @@ const CustomRealmProvider = ({children}) => {
         partitionValue: ObjectId(user.id),
         newRealmFileBehavior: OpenRealmBehaviorConfiguration,
         existingRealmFileBehavior: OpenRealmBehaviorConfiguration,
+        error: handleSyncError,
       }}>
       {children}
     </RealmProvider>
