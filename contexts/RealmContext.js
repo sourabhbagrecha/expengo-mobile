@@ -1,7 +1,7 @@
 import React from 'react';
 import {createRealmContext, useUser} from '@realm/react';
 import {ObjectId} from 'bson';
-import {expenseSchema} from '../schema';
+import {expenseSchema} from '../schema/expenseSchema';
 
 const {RealmProvider, useRealm, useQuery, useObject} = createRealmContext({
   schema: [expenseSchema],
