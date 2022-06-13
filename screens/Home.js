@@ -1,9 +1,10 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {formatDistanceToNow} from 'date-fns';
-import {FlatList, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {FlatList, StyleSheet, View, Text} from 'react-native';
 import {useQuery} from '../contexts/RealmContext';
 import {useExpenses} from '../contexts/ExpenseContext';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
 const ExpenseCard = ({exp}) => {
   const nav = useNavigation();
@@ -31,14 +32,12 @@ const ExpenseCard = ({exp}) => {
           <Text>{formatDistanceToNow(new Date(exp.createdAt))}</Text>
         </View>
         <View style={styles.cardButtonRow}>
-          <TouchableOpacity
-            style={styles.editButton}
-            onPress={navigateToEditExpense}>
+          <Pressable style={styles.editButton} onPress={navigateToEditExpense}>
             <Text style={styles.editText}>Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onDelete}>
+          </Pressable>
+          <Pressable onPress={onDelete}>
             <Text style={styles.deleteText}>Delete</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </View>
@@ -56,9 +55,9 @@ export default function Home() {
     <View style={styles.screen}>
       <View style={styles.screenTitleRow}>
         <Text style={styles.screenTitle}>All Expenses</Text>
-        <TouchableOpacity style={styles.addButton} onPress={navigateToNew}>
+        <Pressable style={styles.addButton} onPress={navigateToNew}>
           <Text style={styles.addButtonText}>+ ADD</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
       <FlatList
         data={expenses}
@@ -76,7 +75,12 @@ const styles = StyleSheet.create({
     padding: 20,
     fontWeight: 'bold',
   },
-  addButton: {backgroundColor: '#77f', padding: 10, borderRadius: 7},
+  addButton: ({pressed}) => ({
+    backgroundColor: '#77f',
+    padding: 10,
+    borderRadius: 7,
+    opacity: pressed ? 0.5 : 1,
+  }),
   addButtonText: {fontWeight: 'bold'},
   card: {
     margin: 10,

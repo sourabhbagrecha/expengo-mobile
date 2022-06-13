@@ -1,10 +1,9 @@
 import {useNavigation} from '@react-navigation/native';
 import {Realm, useApp} from '@realm/react';
 import React, {useState} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import {StyleSheet, Text, TextInput, View, Pressable} from 'react-native';
 
-const Login = () => {
+const Signup = () => {
   const [email, setEmail] = useState('sourabhbagrecha@gmail.com');
   const [password, setPassword] = useState('secret123');
   const nav = useNavigation();
@@ -13,19 +12,20 @@ const Login = () => {
 
   const onSubmit = async () => {
     try {
+      await app.emailPasswordAuth.registerUser({email, password});
       await app.logIn(Realm.Credentials.emailPassword(email, password));
     } catch (error) {
       console.error(error);
     }
   };
 
-  const onSignupClick = () => {
-    nav.navigate('Signup');
+  const onLoginClick = () => {
+    nav.navigate('Login');
   };
 
   return (
-    <View style={styles}>
-      <Text style={styles.title}>Login</Text>
+    <View>
+      <Text style={styles.title}>Signup</Text>
       <TextInput
         placeholder="Email"
         value={email}
@@ -41,11 +41,11 @@ const Login = () => {
         style={styles.input}
       />
       <Pressable onPress={onSubmit} style={styles.submitButton}>
-        <Text style={styles.submitButtonText}>Login</Text>
+        <Text style={styles.submitButtonText}>Signup</Text>
       </Pressable>
-      <Pressable onPress={onSignupClick} style={styles.linkToSignup}>
-        <Text style={styles.linkToSignupText}>
-          Don't have an account? Signup
+      <Pressable onPress={onLoginClick} style={styles.linkToLogin}>
+        <Text style={styles.linkToLoginText}>
+          Have an account already? Login!
         </Text>
       </Pressable>
     </View>
@@ -69,12 +69,12 @@ const styles = StyleSheet.create({
     marginTop: 200,
     fontWeight: '700',
   },
-  linkToSignup: ({pressed}) => ({
+  linkToLogin: ({pressed}) => ({
     marginTop: 5,
     marginRight: 10,
     opacity: pressed ? 0.5 : 1,
   }),
-  linkToSignupText: {
+  linkToLoginText: {
     fontSize: 15,
     color: 'rgb(25, 118, 210)',
     textAlign: 'right',
@@ -94,4 +94,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Signup;

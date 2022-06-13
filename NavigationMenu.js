@@ -5,6 +5,7 @@ import CreateExpense from './screens/CreateExpense';
 import Home from './screens/Home';
 import EditExpense from './screens/EditExpense';
 import Login from './screens/Login';
+import Signup from './screens/Signup';
 
 const AuthNavMenu = () => {
   const Stack = createNativeStackNavigator();
@@ -33,6 +34,11 @@ const UnAuthNavMenu = () => {
             name="Login"
             options={{title: 'Login'}}
             component={Login}
+          />
+          <Stack.Screen
+            name="Signup"
+            options={{title: 'Signup'}}
+            component={Signup}
           />
         </>
       </Stack.Navigator>
