@@ -1,10 +1,9 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {formatDistanceToNow} from 'date-fns';
-import {FlatList, StyleSheet, View, Text} from 'react-native';
+import {FlatList, StyleSheet, View, Text, Pressable, Alert} from 'react-native';
 import {useQuery} from '../contexts/RealmContext';
 import {useExpenses} from '../contexts/ExpenseContext';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
 const ExpenseCard = ({exp}) => {
   const nav = useNavigation();
@@ -12,9 +11,18 @@ const ExpenseCard = ({exp}) => {
   const navigateToEditExpense = () => {
     nav.navigate('Edit', {_id: exp._id.toString()});
   };
+  const deleteConfirmed = () => deleteExpenseById(exp._id);
   const onDelete = () => {
-    deleteExpenseById(exp._id);
+    Alert.alert(
+      `Delete ${exp.title}?`,
+      'Are you sure you want to delete this expense?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Delete', onPress: deleteConfirmed, style: 'destructive'},
+      ],
+    );
   };
+
   return (
     <View style={styles.card}>
       <View style={styles.cardRow}>
