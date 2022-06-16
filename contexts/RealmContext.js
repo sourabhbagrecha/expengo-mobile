@@ -1,7 +1,7 @@
 import React from 'react';
 import {createRealmContext, useUser} from '@realm/react';
-import {ObjectId} from 'bson';
 import {expenseSchema} from '../schema/expenseSchema';
+import Loading from '../screens/Loading';
 
 const {RealmProvider, useRealm, useQuery, useObject} = createRealmContext({
   schema: [expenseSchema],
@@ -10,21 +10,22 @@ const {RealmProvider, useRealm, useQuery, useObject} = createRealmContext({
 const CustomRealmProvider = ({children}) => {
   const user = useUser();
 
-  const OpenRealmBehaviorConfiguration = {
-    type: 'openImmediately',
-  };
-
-  const handleSyncError = err => {
-    console.error({err});
+  const handleSyncError = (_session, err) => {
+    console.error(err.message);
   };
 
   return (
     <RealmProvider
+      fallback={Loading}
       sync={{
         user,
-        partitionValue: ObjectId(user.id),
-        newRealmFileBehavior: OpenRealmBehaviorConfiguration,
-        existingRealmFileBehavior: OpenRealmBehaviorConfiguration,
+        flexible: true,
+        initialSubscriptions: {
+          update: (subs, realm) => {
+            subs.add(realm.objects('expense'));
+          },
+          rerunOnOpen: true,
+        },
         error: handleSyncError,
       }}>
       {children}
