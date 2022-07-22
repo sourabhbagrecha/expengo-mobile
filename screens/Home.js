@@ -70,6 +70,7 @@ export default function Home() {
           </Pressable>
         </View>
         <FlatList
+          style={styles.listMain}
           data={expenses}
           renderItem={({item}) => <ExpenseCard exp={item} />}
         />
@@ -128,5 +129,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 20,
     textAlign: 'right',
+  },
+  listMain: {
+    marginBottom: 30,
   },
 });
