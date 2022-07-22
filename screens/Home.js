@@ -4,6 +4,7 @@ import {formatDistanceToNow} from 'date-fns';
 import {FlatList, StyleSheet, View, Text, Pressable, Alert} from 'react-native';
 import {useQuery} from '../contexts/RealmContext';
 import {useExpenses} from '../contexts/ExpenseContext';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const ExpenseCard = ({exp}) => {
   const nav = useNavigation();
@@ -60,18 +61,20 @@ export default function Home() {
   };
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.screenTitleRow}>
-        <Text style={styles.screenTitle}>All Expenses</Text>
-        <Pressable style={styles.addButton} onPress={navigateToNew}>
-          <Text style={styles.addButtonText}>+ ADD</Text>
-        </Pressable>
+    <SafeAreaView>
+      <View style={styles.screen}>
+        <View style={styles.screenTitleRow}>
+          <Text style={styles.screenTitle}>All Expenses</Text>
+          <Pressable style={styles.addButton} onPress={navigateToNew}>
+            <Text style={styles.addButtonText}>+ ADD</Text>
+          </Pressable>
+        </View>
+        <FlatList
+          data={expenses}
+          renderItem={({item}) => <ExpenseCard exp={item} />}
+        />
       </View>
-      <FlatList
-        data={expenses}
-        renderItem={({item}) => <ExpenseCard exp={item} />}
-      />
-    </View>
+    </SafeAreaView>
   );
 }
 
