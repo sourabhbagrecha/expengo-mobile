@@ -26,6 +26,16 @@ const Analytics = () => {
     for (let key in resultsObj) {
       results.push({mode: key, ...resultsObj[key]});
     }
+    // Sorting the modes on the basis of totalAmount
+    results.sort((a, b) => {
+      if (a.totalAmount > b.totalAmount) {
+        return -1;
+      }
+      if (a.totalAmount < b.totalAmount) {
+        return 1;
+      }
+      return 0;
+    });
     return results;
   }, [expenses]);
 
@@ -33,13 +43,13 @@ const Analytics = () => {
     return groupExpensesOnBasisOfModes();
     // modesData=
     // [
-    //   {mode: 'Cash', totalAmount: 320},
-    //   {mode: 'Credit Card', totalAmount: 1280},
-    //   {mode: 'Axis Savings A/c', totalAmount: 900},
-    //   {mode: 'UPI', totalAmount: 1390},
-    //   {mode: 'Demo', totalAmount: 2},
-    //   {mode: 'Axis CC', totalAmount: 1200},
     //   {mode: 'Cheque', totalAmount: 3000},
+    //   {mode: 'UPI', totalAmount: 1390},
+    //   {mode: 'Credit Card', totalAmount: 1280},
+    //   {mode: 'Axis CC', totalAmount: 1200},
+    //   {mode: 'Axis Savings A/c', totalAmount: 900},
+    //   {mode: 'Cash', totalAmount: 320},
+    //   {mode: 'Demo', totalAmount: 2},
     // ];
   }, [groupExpensesOnBasisOfModes]);
 
